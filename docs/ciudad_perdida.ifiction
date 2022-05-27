@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ifindex version="1.0" xmlns="http://babel.ifarchive.org/protocol/iFiction/">
+    <story>
+        <identification>
+            <ifid>D3DBD410-505E-47D6-9CBE-14A3EBEE91AB</ifid>
+            <format>html</format>
+        </identification>
+        <bibliographic>
+            <title>Chactun, la ciudad perdida</title>
+            <author>Baltasar</author>
+            <language>ES</language>
+            <headline>En busca de Chactun, la ciudad perdida.</headline>
+            <genre>mistery</genre>
+            <forgiveness>merciful</forgiveness>
+            <description>Recibes la llamada de la hija de un explorador del siglo pasado para recuperar las pistas dejadas por él y poder encontrar la ciudad perdida de los mayas.</description>
+        </bibliographic>
+        <contacts>
+            <authoremail>baltasarq@gmail.com</authoremail>
+            <url>http://caad.es/baltasarq/</url>
+        </contacts>
+        <release>
+            <version>1</version>
+            <releasedate>2022/05/28</releasedate>
+        </release>
+        <colophon>
+            <generator>Babble</generator>
+            <originated>2022/05/28</originated>
+        </colophon>
+    </story>
+</ifindex>

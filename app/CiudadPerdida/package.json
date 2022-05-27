@@ -1,0 +1,17 @@
+{
+  "name": "com.devbaltasarq.paititi",
+  "displayName": "Paititi",
+  "version": "1.0.0",
+  "description": "En busca de la ciudad perdida.",
+  "main": "index.html",
+  "author": "Baltasar",
+  "license": "MIT",
+  "devDependencies": {
+    "cordova-android": "^10.1.2"
+  },
+  "cordova": {
+    "platforms": [
+      "android"
+    ]
+  }
+}

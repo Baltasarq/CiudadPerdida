@@ -1,0 +1,169 @@
+Borde del cenote
+El agua tranquila y cristalina, de un azul nacarado llena el pozo. En el borde más alejado, puedes oir cómo el mar invisible contra la costa rocosa, el único lugar donde se aprecia cierto movimiento. Unas ${escaleras de antigua piedra, ex escaleras} al ${norte, n} dan a entender que hay algo más en este maravilloso lugar.
+
+> ex aguas
+Aún sabiendo que es salobre, dan ganas de bebérsela.
+
+> ex escaleras
+La piedra aparece desbastada y cubierta parcialmente de hojarasca y flora.
+
+> n Recodo en las escaleras
+.end
+
+Recodo en las escaleras
+Las escaleras hacen aquí un recodo en ángulo recto, de manera que un tramo asciende hacia el ${sur, sur} y otro desciende hacia el ${este, este}. Los peldaños parecen incrustados en el muro, saliendo de este como travesaños colgados en el aire. Enredaderas y lianas cuelgan del muro y de los bordes de algunos peldaños.
+
+> s a Borde del cenote
+> e a Plataforma
+.end
+
+Plataforma
+Las escaleras acaban al borde del agua, donde un rellano más ancho de lo habitual crea una plataforma de piedra. Algunos ${maderos, ex maderos} aparecen esparcidos por la plataforma.
+
+> ex agua
+Tranquilas, nacaradas y salobres aguas. Aún así, no puedes ver el fondo, solo un oscurecimiento paulatino con la profundidad.
+
+> ex maderos
+Trozos de madera podridos por la humedad. Parecen indicar que había algún tipo de construcción que permitía comunicar esta plataforma con... ¿algún lugar ${bajo el agua, ex profundidades}?
+
+> ex profundidades
+Desde aquí no aprecias el fondo. En la pared sí que puedes ver salientes de piedra que se suceden como en una hilera que va tomando profundidad en una suave diagonal.
+
+> o a Recodo en las escaleras
+.end
+
+Cueva
+[Sales del agua subiendo por una rampa, y miras en derredor.]
+La cueva contiene una piscina natural de agua de la que asciende una rampa de piedra para culminar en un ${rellano, ex rellano} y un ${adornado dintel, ex dintel} sobre un pasaje al ${este, este}. Aquí también hay restos de maderos.
+
+> ex rampa
+De piedras que notas suaves al tacto, probablemente por la cantidad de pequeñas algas que alfombran su superficie, lo que los hace bastante resbaladizos.
+
+> ex rellano
+Se encuentra razonablemente limpio y seco.
+
+> ex dintel
+Aprovechando un pasaje en la cueva, se ha construído un marco alrededor, orlado con distintos motivos solares.
+
+> e a Sala recibidor
+.end
+
+Sala recibidor
+[Sales del pasaje ligeramente encorvado.]
+Una gran sala de alta ${bóveda, ex boveda} se abre de forma natural en la cueva. Los muros están revestidas de piedra labrada, como si a modo de ${paredes, ex paredes} se trataran. Un pequeño estrechamiento al ${este, este} parece indicar algún tipo de salida, aunque desde aquí parece que sigue la misma sala.
+
+> ex boveda
+La bóveda se cierra un metro por encima de tu cabeza, suficientemente alta como para que se aprecie oscura.
+
+> ex paredes
+No eres un experto en simbología maya, aunque el sol parece ocupar un lugar predominante en todos los grupos de glifos. Además, a intervalos regulares en las paredes norte y sur puedes ver ciertas ${portuberancias de piedra, ex soportes}.
+
+> ex soportes
+Las portuberancias de las paredes norte y sur tienen forma de soportes o bandejas para un líquido oleoso, que puedes ver fluyendo, entrando y saliendo por pequeños orificios. De hecho, puedes escuchar un pequeño rumor en algún lugar al otro lado de la pared. Por otra parte, una importante parte de ellas están secas, supones que algo bloquea el flujo del aceite.
+
+> e a Sala circular
+> n a Grieta
+> s a Acuifero
+.end
+
+Sala circular
+Aunque no lo parecía desde el exterior, esta sala tiene una curiosa forma redonda y alargada. Las ${paredes, ex paredes} norte y sur se ensanchan en sendos semicírculos.  También hay ${portuberancias, ex portuberancias} en las ${paredes, ex paredes}.
+
+> ex paredes circulares
+Las paredes, como en las otras salas, tienen profusión de simbología solar. Además, hay ${portuberancias, ex portuberancias} en todas ellas a intervalos regulares. Una gran ${grieta, ex grieta} recorre la totalidad de la estancia de forma vertical.
+
+> e a Sala del trono
+> o a Sala recibidor
+> n a Pasaje agrietado
+.end
+
+Sala del trono
+Un gran espacio rectangular parece terminar en una zona alta y más estrecha que se te antoja una zona privilegiada. De nuevo las ${portuberancias, ex portuberancias} se sitúan en los muros norte y sur, a intervalos regulares.
+
+> o a Sala circular
+.end
+
+Pasaje agrietado
+[Es necesario agacharse para cruzar.]
+El pasaje de ${norte, norte} a ${sur, sur} parece un antiguo túnel del que se ha desprendido el techo del que solo quedan escombros. Así, la forma es de un bajo pasillo con forma triangular.
+
+> ex escombros
+Los restos del techo yacen esparcidos por el suelo, en forma de trozos de piedras labradas.
+
+> s a Sala circular
+> n
+
+Grieta
+Una gran ${grieta, ex sima} atraviesa la caverna de este a oeste. Un ${puente de piedra, ex puente} permite cruzarla.
+
+> ex sima
+Una gran altura hasta un acuífero que ruge por entre las rocas.
+
+> ex puente
+Dos contrafuertes se alzan desde sendos bordes de la grieta, y se unen en su parte superior en una suerte de rampa. La subida y bajada resulta abrupta.
+
+> n
+
+Cruce de pasajes
+En esta pequeña sala pueden encontrarse ${túneles, ex tuneles} que permiten moverse al ${norte, norte}, ${sur, sur}, ${este, este} y ${oeste, oeste}.
+
+> ex tuneles
+Los túneles permiten avanzar en todas direcciones: ${norte, norte}, ${sur, sur}, ${este, este} y ${oeste, oeste}.
+
+> e
+
+Gran sala
+Esta gran caverna no cuenta con ningún tipo de decoración, excepto en los ${accesos, ex accesos} hacia el ${norte, norte}, ${sur, sur}, ${este, este}, ${oeste, oeste} y ${sur, sur}.
+
+> ex accesos
+Los accesos están decorados con glifos de todo tipo, en los que sigue teniendo un gran protagonismo el sol.
+
+> n a Almacen
+> s a Balcon
+> o a Cruce de pasajes
+> e
+
+Almacen
+Contra los muros de esta sala se apilan diferentes útiles y materiales, dejando libres nuevos accesos al ${norte, norte}, ${sur, sur}, ${este, este} y ${oeste, oeste}.
+
+> n a Gran sala
+> e a Cruce de pasajes
+> s a Cruce de pasajes
+> o a Gran sala
+.end
+
+Balcon
+Aún pareciendo en un principio un pasaje estrecho, la sala se abre desde el ${norte, n} al ${sur, sur} dejando ver una gran sima, de una profundidad tan grande que resulta imposible ver el fondo.
+
+> n a Gran sala
+.end
+
+Acuifero
+Un ${río, ex rio} subterráneo corre de ${este, este} a ${oeste, oeste},
+
+> ex rio
+El agua circula con fuerza hacia el ${oeste, oeste}, hacia donde la caverna, sin adornos de ningún tipo, se estrecha dejando apenas paso para el agua y una pequeña ${senda, ex senda}.
+
+> ex senda
+La superficie de la cueva es altamente irregular, y hacia el ${este, e} parece convertirse en una pequeña gruta en la que apenas queda espacio para cruzar.
+
+> e
+
+Presa
+Una ${represa, ex represa} se sitúa en mitad de la caverna, aunque gran cantidad de ${agua, ex acuifero} circula hacia el ${oeste, oeste}. Una ${pequeña abertura, ex abertura} permite el paso hacia el ${este, este}.
+
+> ex acuifero
+El agua va ganando fuerza hacia el ${este, este}.
+
+> ex abertura
+Tienes que agacharte para poder apreciar que hay camino hacia el ${este, este}. Por algún motivo, te recuerda un túnel de mantenimiento.
+
+> n a Sala recibidor
+> e
+
+Sala reducida
+Solo puedes ver cómo el agua desciende por debajo del nivel de la ${pared de piedra, ex pared} que corta el acceso hacia el ${este, este}. La única salida parece estar al ${oeste, oeste}.
+
+> ex pared de piedra
+Una gran roca lisa y totalmente natural.
+.end

@@ -1,0 +1,300 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+
+<Mapa >
+<LocInic>Borde del cenote</LocInic>
+<Locs >
+<Loc >
+<Nombre>Acuifero</Nombre>
+<Desc>
+Un ${río, ex rio} subterráneo corre de ${este, este} a ${oeste, oeste},</Desc>
+<ESTE>Presa</ESTE>
+</Loc>
+
+<Loc >
+<Nombre>Almacen</Nombre>
+<Desc>
+Contra los muros de esta sala se apilan diferentes útiles y materiales, dejando libres nuevos accesos al ${norte, norte}, ${sur, sur}, ${este, este} y ${oeste, oeste}.</Desc>
+<NORTE>Gran sala</NORTE>
+<SUR>Cruce de pasajes</SUR>
+<ESTE>Cruce de pasajes</ESTE>
+<OESTE>Gran sala</OESTE>
+</Loc>
+
+<Loc >
+<Nombre>Balcon</Nombre>
+<Desc>
+Aún pareciendo en un principio un pasaje estrecho, la sala se abre desde el ${norte, n} al ${sur, sur} dejando ver una gran sima, de una profundidad tan grande que resulta imposible ver el fondo.</Desc>
+<NORTE>Gran sala</NORTE>
+</Loc>
+
+<Loc >
+<Nombre>Borde del cenote</Nombre>
+<Desc>
+El agua tranquila y cristalina, de un azul nacarado llena el pozo. En el borde más alejado, puedes oir cómo el mar invisible contra la costa rocosa, el único lugar donde se aprecia cierto movimiento. Unas ${escaleras de antigua piedra, ex escaleras} al ${norte, n} dan a entender que hay algo más en este maravilloso lugar.</Desc>
+<NORTE>Recodo en las escaleras</NORTE>
+</Loc>
+
+<Loc >
+<Nombre>Cruce de pasajes</Nombre>
+<Desc>
+En esta pequeña sala pueden encontrarse ${túneles, ex tuneles} que permiten moverse al ${norte, norte}, ${sur, sur}, ${este, este} y ${oeste, oeste}.</Desc>
+<SUR>Grieta</SUR>
+<ESTE>Gran sala</ESTE>
+</Loc>
+
+<Loc >
+<Nombre>Cueva</Nombre>
+<Desc>
+
+La cueva contiene una piscina natural de agua de la que asciende una rampa de piedra para culminar en un ${rellano, ex rellano} y un ${adornado dintel, ex dintel} sobre un pasaje al ${este, este}. Aquí también hay restos de maderos.</Desc>
+<Com>Sales del agua subiendo por una rampa, y miras en derredor.</Com>
+<ESTE>Sala recibidor</ESTE>
+</Loc>
+
+<Loc >
+<Nombre>Gran sala</Nombre>
+<Desc>
+Esta gran caverna no cuenta con ningún tipo de decoración, excepto en los ${accesos, ex accesos} hacia el ${norte, norte}, ${sur, sur}, ${este, este}, ${oeste, oeste} y ${sur, sur}.</Desc>
+<NORTE>Almacen</NORTE>
+<SUR>Balcon</SUR>
+<ESTE>Almacen</ESTE>
+<OESTE>Cruce de pasajes</OESTE>
+</Loc>
+
+<Loc >
+<Nombre>Grieta</Nombre>
+<Desc>
+Una gran ${grieta, ex sima} atraviesa la caverna de este a oeste. Un ${puente de piedra, ex puente} permite cruzarla.</Desc>
+<NORTE>Cruce de pasajes</NORTE>
+<SUR>Pasaje agrietado</SUR>
+</Loc>
+
+<Loc >
+<Nombre>Pasaje agrietado</Nombre>
+<Desc>
+
+El pasaje de ${norte, norte} a ${sur, sur} parece un antiguo túnel del que se ha desprendido el techo del que solo quedan escombros. Así, la forma es de un bajo pasillo con forma triangular.</Desc>
+<Com>Es necesario agacharse para cruzar.</Com>
+<NORTE>Grieta</NORTE>
+<SUR>Sala circular</SUR>
+</Loc>
+
+<Loc >
+<Nombre>Plataforma</Nombre>
+<Desc>
+Las escaleras acaban al borde del agua, donde un rellano más ancho de lo habitual crea una plataforma de piedra. Algunos ${maderos, ex maderos} aparecen esparcidos por la plataforma.</Desc>
+<OESTE>Recodo en las escaleras</OESTE>
+</Loc>
+
+<Loc >
+<Nombre>Presa</Nombre>
+<Desc>
+Una ${represa, ex represa} se sitúa en mitad de la caverna, aunque gran cantidad de ${agua, ex acuifero} circula hacia el ${oeste, oeste}. Una ${pequeña abertura, ex abertura} permite el paso hacia el ${este, este}.</Desc>
+<NORTE>Sala recibidor</NORTE>
+<ESTE>Sala reducida</ESTE>
+<OESTE>Acuifero</OESTE>
+</Loc>
+
+<Loc >
+<Nombre>Recodo en las escaleras</Nombre>
+<Desc>
+Las escaleras hacen aquí un recodo en ángulo recto, de manera que un tramo asciende hacia el ${sur, sur} y otro desciende hacia el ${este, este}. Los peldaños parecen incrustados en el muro, saliendo de este como travesaños colgados en el aire. Enredaderas y lianas cuelgan del muro y de los bordes de algunos peldaños.</Desc>
+<SUR>Borde del cenote</SUR>
+<ESTE>Plataforma</ESTE>
+</Loc>
+
+<Loc >
+<Nombre>Sala circular</Nombre>
+<Desc>
+Aunque no lo parecía desde el exterior, esta sala tiene una curiosa forma redonda y alargada. Las ${paredes, ex paredes} norte y sur se ensanchan en sendos semicírculos.  También hay ${portuberancias, ex portuberancias} en las ${paredes, ex paredes}.</Desc>
+<NORTE>Pasaje agrietado</NORTE>
+<ESTE>Sala del trono</ESTE>
+<OESTE>Sala recibidor</OESTE>
+</Loc>
+
+<Loc >
+<Nombre>Sala del trono</Nombre>
+<Desc>
+Un gran espacio rectangular parece terminar en una zona alta y más estrecha que se te antoja una zona privilegiada. De nuevo las ${portuberancias, ex portuberancias} se sitúan en los muros norte y sur, a intervalos regulares.</Desc>
+<OESTE>Sala circular</OESTE>
+</Loc>
+
+<Loc >
+<Nombre>Sala recibidor</Nombre>
+<Desc>
+
+Una gran sala de alta ${bóveda, ex boveda} se abre de forma natural en la cueva. Los muros están revestidas de piedra labrada, como si a modo de ${paredes, ex paredes} se trataran. Un pequeño estrechamiento al ${este, este} parece indicar algún tipo de salida, aunque desde aquí parece que sigue la misma sala.</Desc>
+<Com>Sales del pasaje ligeramente encorvado.</Com>
+<NORTE>Grieta</NORTE>
+<SUR>Acuifero</SUR>
+<ESTE>Sala circular</ESTE>
+</Loc>
+
+<Loc >
+<Nombre>Sala reducida</Nombre>
+<Desc>
+Solo puedes ver cómo el agua desciende por debajo del nivel de la ${pared de piedra, ex pared} que corta el acceso hacia el ${este, este}. La única salida parece estar al ${oeste, oeste}.</Desc>
+<OESTE>Presa</OESTE>
+</Loc>
+
+</Locs>
+
+<Objs >
+<Obj >
+<Nombre>abertura</Nombre>
+<Desc>Tienes que agacharte para poder apreciar que hay camino hacia el ${este, este}. Por algún motivo, te recuerda un túnel de mantenimiento.</Desc>
+<estaEn>Presa</estaEn>
+<Escenario>S</Escenario>
+</Obj>
+
+<Obj >
+<Nombre>accesos</Nombre>
+<Desc>Los accesos están decorados con glifos de todo tipo, en los que sigue teniendo un gran protagonismo el sol.</Desc>
+<estaEn>Gran sala</estaEn>
+<Escenario>S</Escenario>
+</Obj>
+
+<Obj >
+<Nombre>acuifero</Nombre>
+<Desc>El agua va ganando fuerza hacia el ${este, este}.</Desc>
+<estaEn>Presa</estaEn>
+<Escenario>S</Escenario>
+</Obj>
+
+<Obj >
+<Nombre>agua</Nombre>
+<Desc>Tranquilas, nacaradas y salobres aguas. Aún así, no puedes ver el fondo, solo un oscurecimiento paulatino con la profundidad.</Desc>
+<estaEn>Plataforma</estaEn>
+<Escenario>S</Escenario>
+</Obj>
+
+<Obj >
+<Nombre>aguas</Nombre>
+<Desc>Aún sabiendo que es salobre, dan ganas de bebérsela.</Desc>
+<estaEn>Borde del cenote</estaEn>
+<Escenario>S</Escenario>
+</Obj>
+
+<Obj >
+<Nombre>boveda</Nombre>
+<Desc>La bóveda se cierra un metro por encima de tu cabeza, suficientemente alta como para que se aprecie oscura.</Desc>
+<estaEn>Sala recibidor</estaEn>
+<Escenario>S</Escenario>
+</Obj>
+
+<Obj >
+<Nombre>dintel</Nombre>
+<Desc>Aprovechando un pasaje en la cueva, se ha construído un marco alrededor, orlado con distintos motivos solares.</Desc>
+<estaEn>Cueva</estaEn>
+<Escenario>S</Escenario>
+</Obj>
+
+<Obj >
+<Nombre>escaleras</Nombre>
+<Desc>La piedra aparece desbastada y cubierta parcialmente de hojarasca y flora.</Desc>
+<estaEn>Borde del cenote</estaEn>
+<Escenario>S</Escenario>
+</Obj>
+
+<Obj >
+<Nombre>escombros</Nombre>
+<Desc>Los restos del techo yacen esparcidos por el suelo, en forma de trozos de piedras labradas.</Desc>
+<estaEn>Pasaje agrietado</estaEn>
+<Escenario>S</Escenario>
+</Obj>
+
+<Obj >
+<Nombre>maderos</Nombre>
+<Desc>Trozos de madera podridos por la humedad. Parecen indicar que había algún tipo de construcción que permitía comunicar esta plataforma con... ¿algún lugar ${bajo el agua, ex profundidades}?</Desc>
+<estaEn>Plataforma</estaEn>
+<Escenario>S</Escenario>
+</Obj>
+
+<Obj >
+<Nombre>pared de piedra</Nombre>
+<Desc>Una gran roca lisa y totalmente natural.</Desc>
+<estaEn>Sala reducida</estaEn>
+<Escenario>S</Escenario>
+</Obj>
+
+<Obj >
+<Nombre>paredes</Nombre>
+<Desc>No eres un experto en simbología maya, aunque el sol parece ocupar un lugar predominante en todos los grupos de glifos. Además, a intervalos regulares en las paredes norte y sur puedes ver ciertas ${portuberancias de piedra, ex soportes}.</Desc>
+<estaEn>Sala recibidor</estaEn>
+<Escenario>S</Escenario>
+</Obj>
+
+<Obj >
+<Nombre>paredes circulares</Nombre>
+<Desc>Las paredes, como en las otras salas, tienen profusión de simbología solar. Además, hay ${portuberancias, ex portuberancias} en todas ellas a intervalos regulares. Una gran ${grieta, ex grieta} recorre la totalidad de la estancia de forma vertical.</Desc>
+<estaEn>Sala circular</estaEn>
+<Escenario>S</Escenario>
+</Obj>
+
+<Obj >
+<Nombre>profundidades</Nombre>
+<Desc>Desde aquí no aprecias el fondo. En la pared sí que puedes ver salientes de piedra que se suceden como en una hilera que va tomando profundidad en una suave diagonal.</Desc>
+<estaEn>Plataforma</estaEn>
+<Escenario>S</Escenario>
+</Obj>
+
+<Obj >
+<Nombre>puente</Nombre>
+<Desc>Dos contrafuertes se alzan desde sendos bordes de la grieta, y se unen en su parte superior en una suerte de rampa. La subida y bajada resulta abrupta.</Desc>
+<estaEn>Grieta</estaEn>
+<Escenario>S</Escenario>
+</Obj>
+
+<Obj >
+<Nombre>rampa</Nombre>
+<Desc>De piedras que notas suaves al tacto, probablemente por la cantidad de pequeñas algas que alfombran su superficie, lo que los hace bastante resbaladizos.</Desc>
+<estaEn>Cueva</estaEn>
+<Escenario>S</Escenario>
+</Obj>
+
+<Obj >
+<Nombre>rellano</Nombre>
+<Desc>Se encuentra razonablemente limpio y seco.</Desc>
+<estaEn>Cueva</estaEn>
+<Escenario>S</Escenario>
+</Obj>
+
+<Obj >
+<Nombre>rio</Nombre>
+<Desc>El agua circula con fuerza hacia el ${oeste, oeste}, hacia donde la caverna, sin adornos de ningún tipo, se estrecha dejando apenas paso para el agua y una pequeña ${senda, ex senda}.</Desc>
+<estaEn>Acuifero</estaEn>
+<Escenario>S</Escenario>
+</Obj>
+
+<Obj >
+<Nombre>senda</Nombre>
+<Desc>La superficie de la cueva es altamente irregular, y hacia el ${este, e} parece convertirse en una pequeña gruta en la que apenas queda espacio para cruzar.</Desc>
+<estaEn>Acuifero</estaEn>
+<Escenario>S</Escenario>
+</Obj>
+
+<Obj >
+<Nombre>sima</Nombre>
+<Desc>Una gran altura hasta un acuífero que ruge por entre las rocas.</Desc>
+<estaEn>Grieta</estaEn>
+<Escenario>S</Escenario>
+</Obj>
+
+<Obj >
+<Nombre>soportes</Nombre>
+<Desc>Las portuberancias de las paredes norte y sur tienen forma de soportes o bandejas para un líquido oleoso, que puedes ver fluyendo, entrando y saliendo por pequeños orificios. De hecho, puedes escuchar un pequeño rumor en algún lugar al otro lado de la pared. Por otra parte, una importante parte de ellas están secas, supones que algo bloquea el flujo del aceite.</Desc>
+<estaEn>Sala recibidor</estaEn>
+<Escenario>S</Escenario>
+</Obj>
+
+<Obj >
+<Nombre>tuneles</Nombre>
+<Desc>Los túneles permiten avanzar en todas direcciones: ${norte, norte}, ${sur, sur}, ${este, este} y ${oeste, oeste}.</Desc>
+<estaEn>Cruce de pasajes</estaEn>
+<Escenario>S</Escenario>
+</Obj>
+
+</Objs>
+
+</Mapa>
+

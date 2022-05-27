@@ -1,0 +1,154 @@
+      0 txtMap v0.6 20140612
+      0 entrada: cenote/cenote-locs.txt
+      0 ========================
+      1 nueva localidad 'Borde del cenote'
+      2 tomando desc.
+      4 tomando desc. objeto
+      4 Aceptando desc. de objeto 
+      4 Objeto aguas
+      7 tomando desc. objeto
+      7 Aceptando desc. de objeto 
+      7 Objeto escaleras
+     11 FINLOC encontrado
+     13 nueva localidad 'Recodo en las escaleras'
+     13 'Borde del cenote' por NORTE a 'Recodo en las escaleras'
+     13 'Recodo en las escaleras' por [inversa]  SUR a 'Borde del cenote'
+     14 tomando desc.
+     16 preparando primer movimiento
+     16 Recodo en las escaleras por SUR a Borde del cenote
+     17 Recodo en las escaleras por ESTE a Plataforma
+     18 FINLOC encontrado
+     20 nueva localidad 'Plataforma'
+     21 tomando desc.
+     23 tomando desc. objeto
+     23 Aceptando desc. de objeto 
+     23 Objeto agua
+     26 tomando desc. objeto
+     26 Aceptando desc. de objeto 
+     26 Objeto maderos
+     29 tomando desc. objeto
+     29 Aceptando desc. de objeto 
+     29 Objeto profundidades
+     32 Plataforma por OESTE a Recodo en las escaleras
+     33 FINLOC encontrado
+     35 nueva localidad 'Cueva'
+     36 tomando desc.
+     37 tomando desc.
+     39 tomando desc. objeto
+     39 Aceptando desc. de objeto 
+     39 Objeto rampa
+     42 tomando desc. objeto
+     42 Aceptando desc. de objeto 
+     42 Objeto rellano
+     45 tomando desc. objeto
+     45 Aceptando desc. de objeto 
+     45 Objeto dintel
+     48 Cueva por ESTE a Sala recibidor
+     49 FINLOC encontrado
+     51 nueva localidad 'Sala recibidor'
+     52 tomando desc.
+     53 tomando desc.
+     55 tomando desc. objeto
+     55 Aceptando desc. de objeto 
+     55 Objeto boveda
+     58 tomando desc. objeto
+     58 Aceptando desc. de objeto 
+     58 Objeto paredes
+     61 tomando desc. objeto
+     61 Aceptando desc. de objeto 
+     61 Objeto soportes
+     64 Sala recibidor por ESTE a Sala circular
+     65 Sala recibidor por NORTE a Grieta
+     66 Sala recibidor por SUR a Acuifero
+     67 FINLOC encontrado
+     69 nueva localidad 'Sala circular'
+     70 tomando desc.
+     72 tomando desc. objeto
+     72 Aceptando desc. de objeto 
+     72 Objeto paredes circulares
+     75 Sala circular por ESTE a Sala del trono
+     76 Sala circular por OESTE a Sala recibidor
+     77 Sala circular por NORTE a Pasaje agrietado
+     78 FINLOC encontrado
+     80 nueva localidad 'Sala del trono'
+     81 tomando desc.
+     83 preparando primer movimiento
+     83 Sala del trono por OESTE a Sala circular
+     84 FINLOC encontrado
+     86 nueva localidad 'Pasaje agrietado'
+     87 tomando desc.
+     88 tomando desc.
+     90 tomando desc. objeto
+     90 Aceptando desc. de objeto 
+     90 Objeto escombros
+     93 Pasaje agrietado por SUR a Sala circular
+     96 nueva localidad 'Grieta'
+     96 'Pasaje agrietado' por NORTE a 'Grieta'
+     96 'Grieta' por [inversa]  SUR a 'Pasaje agrietado'
+     97 tomando desc.
+     99 tomando desc. objeto
+     99 Aceptando desc. de objeto 
+     99 Objeto sima
+    102 tomando desc. objeto
+    102 Aceptando desc. de objeto 
+    102 Objeto puente
+    107 nueva localidad 'Cruce de pasajes'
+    107 'Grieta' por NORTE a 'Cruce de pasajes'
+    107 'Cruce de pasajes' por [inversa]  SUR a 'Grieta'
+    108 tomando desc.
+    110 tomando desc. objeto
+    110 Aceptando desc. de objeto 
+    110 Objeto tuneles
+    115 nueva localidad 'Gran sala'
+    115 'Cruce de pasajes' por ESTE a 'Gran sala'
+    115 'Gran sala' por [inversa]  OESTE a 'Cruce de pasajes'
+    116 tomando desc.
+    118 tomando desc. objeto
+    118 Aceptando desc. de objeto 
+    118 Objeto accesos
+    121 Gran sala por NORTE a Almacen
+    122 Gran sala por SUR a Balcon
+    123 Gran sala por OESTE a Cruce de pasajes
+    126 nueva localidad 'Almacen'
+    126 'Gran sala' por ESTE a 'Almacen'
+    126 'Almacen' por [inversa]  OESTE a 'Gran sala'
+    127 tomando desc.
+    129 preparando primer movimiento
+    129 Almacen por NORTE a Gran sala
+    130 Almacen por ESTE a Cruce de pasajes
+    131 Almacen por SUR a Cruce de pasajes
+    132 Almacen por OESTE a Gran sala
+    133 FINLOC encontrado
+    135 nueva localidad 'Balcon'
+    136 tomando desc.
+    138 preparando primer movimiento
+    138 Balcon por NORTE a Gran sala
+    139 FINLOC encontrado
+    141 nueva localidad 'Acuifero'
+    142 tomando desc.
+    144 tomando desc. objeto
+    144 Aceptando desc. de objeto 
+    144 Objeto rio
+    147 tomando desc. objeto
+    147 Aceptando desc. de objeto 
+    147 Objeto senda
+    152 nueva localidad 'Presa'
+    152 'Acuifero' por ESTE a 'Presa'
+    152 'Presa' por [inversa]  OESTE a 'Acuifero'
+    153 tomando desc.
+    155 tomando desc. objeto
+    155 Aceptando desc. de objeto 
+    155 Objeto acuifero
+    158 tomando desc. objeto
+    158 Aceptando desc. de objeto 
+    158 Objeto abertura
+    161 Presa por NORTE a Sala recibidor
+    164 nueva localidad 'Sala reducida'
+    164 'Presa' por ESTE a 'Sala reducida'
+    164 'Sala reducida' por [inversa]  OESTE a 'Presa'
+    165 tomando desc.
+    167 tomando desc. objeto
+    167 Aceptando desc. de objeto 
+    167 Objeto pared de piedra
+    169 FINLOC encontrado
+    170 Fin del proceso de cenote/cenote-locs.txt ...
