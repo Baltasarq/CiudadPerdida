@@ -37,4 +37,3 @@ La carretera, formada por piedras redondeadas incrustadas parcialmente en el sue
 ### Pirámide maya Calakmul
 
 Se trata de una pirámide escalonada construida en piedra que presenta una gran escalinata en el frontal. En la cúspide se puede ver una especie de caseta coronándola.
-

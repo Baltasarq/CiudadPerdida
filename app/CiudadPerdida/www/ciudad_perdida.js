@@ -32,6 +32,7 @@ const locAcuifero = ctrl.places.creaLoc(
 
 locAcuifero.ini = function() {
     this.mapPart = Loc.MapPartCenote;
+    this.light = false;
 };
 
 const objRio = ctrl.creaObj(
@@ -68,6 +69,7 @@ const locAlmacen = ctrl.places.creaLoc(
 
 locAlmacen.ini = function() {
     this.mapPart = Loc.MapPartCenote;
+    this.light = true;
     this.setExit( "norte", locCruceDePasajes );
 };
 
@@ -75,10 +77,102 @@ const objMateriales = ctrl.creaObj(
     "material",
     [ "util", "utiles", "materiales" ],
     "Diferentes materiales de madera y piedra de todo tipo, \
-     aunque de la mayoría no puedas adivinar su significado.",
+     aunque de la mayoría no puedas adivinar su significado. \
+     Sí que reconoces varias ${antorchas, ex antorchas}.",
     locAlmacen,
     Ent.Scenery
 );
+
+const objAntorchas = ctrl.creaObj(
+    "antorchas",
+    [ "teas" ],
+    "Muchas antorchas, aunque el tiempo las ha secado en exceso, \
+     de manera que cualquiera de ellas durará un tiempo limitado.",
+    locAlmacen,
+    Ent.Scenery
+);
+
+objAntorchas.preTake = function() {
+    let toret = "¿Para qué? Tu antorcha aún sirve.";
+
+    if ( ctrl.places.limbo( objAntorcha ) ) {
+        toret = "Tomas otra antorcha de las muchas aquí.";
+        objAntorcha.moveTo( ctrl.personas.getPlayer()  );
+        objAntorcha.light();
+    }
+
+    return toret;
+};
+
+const objAntorcha = ctrl.creaObj(
+    "antorcha",
+    [ "tea" ],
+    "A estas alturas, está más seca que otra cosa, con el combustible \
+     ya casi agotado. Va a durar poco.",
+    ctrl.places.limbo,
+    Ent.Portable
+);
+
+objAntorcha.preExamine = function() {
+    let toret = this.desc;
+
+    if ( this.isLit ) {
+        toret += " Todavía arde.";
+    } else {
+        toret += " Apagada.";
+    }
+
+    return toret;
+};
+
+objAntorcha.ini = function() {
+    this.moveTo( locCueva );
+    this.MAX_LIFE = 10;
+    this.isLit = false;
+};
+
+objAntorcha.light = function() {
+    this.turnsWhenLit = ctrl.getTurns();
+
+    ctrl.addDaemon( "ANTORCHA_PER_TURN", function() {
+        const life = this.MAX_LIFE - ( ctrl.getTurns() - this.turnsWhenLit );
+        let toret = "";
+
+        if ( life <= 8 ) {
+            toret = "La antorcha empieza a dar signos \
+                     de agotamiento... Pequeños chisporroteos te \
+                     indican que el propio material se consume ya, \
+                     y se apagará en breve.";
+        }
+        else
+        if ( life <= 5 ) {
+            toret = "Los contínuos chisporroteos en la antorcha \
+                     te indican que su final está cerca... \
+                     ¡necesitas otra!";
+        }
+        else
+        if ( life < 1 ) {
+            toret = "La antorcha se ha apagado... ¡estás a oscuras!";
+            this.isLit = false;
+            ctrl.removeDaemon( "ANTORCHA_PER_TURN" );
+            this.moveTo( ctrl.places.limbo );
+        }
+
+        if ( ctrl.isPresent( this  ) ) {
+            ctrl.print( toret );
+        }
+    });
+
+    return "La tea arde ágil y con mucha luz.";
+};
+
+objAntorcha.preDrop = function() {
+    this.isLit = false;
+    ctrl.removeDaemon( "ANTORCHA_PER_TURN" );
+
+    return "La antorcha se apaga entre pequeños chispazos \
+            al caer al suelo.";
+};
 
 
 // ---------------------------------------------------------------- locBalcon
@@ -95,6 +189,7 @@ locBalcon.timesSouth = 0;
 
 locBalcon.ini = function() {
     this.pic = "res/balcon.jpg";
+    this.light = false;
     this.mapPart = Loc.MapPartCenote;
 };
 
@@ -116,7 +211,7 @@ locBalcon.preGo = function() {
             ctrl.print( "Laura te mira con lástima." );
             pnjLaura.say( "Está bien, si es eso lo que quieres..." );
             ctrl.print( "Saltas al vacío." );
-            ctrl.endGame( "<p>Laura intenta agarrarte de nuevo, pero \
+            endGame( "<p>Laura intenta agarrarte de nuevo, pero \
                            de repente su abrazo se vuelve débil \
                            y te deja ir.</p> \
                            <p>Ella te mira con lástima, meneando \
@@ -152,6 +247,7 @@ const locBordeDelCenote = ctrl.places.creaLoc(
 
 locBordeDelCenote.ini = function() {
     this.mapPart = Loc.MapPartCenote;
+    this.light = true;
     this.pic = "res/cenote_borde.jpg";
 };
 
@@ -184,6 +280,7 @@ const locCruceDePasajes = ctrl.places.creaLoc(
 
 locCruceDePasajes.ini = function() {
     this.mapPart = Loc.PartMapCenote;
+    this.light = false;
 
     this.setExitBi( "norte", locAlmacen );
     this.setExitBi( "oeste", locAlmacen );
@@ -215,6 +312,7 @@ const locCueva = ctrl.places.creaLoc(
 locCueva.ini = function()
 {
     this.pic = "res/dintel.jpg";
+    this.light = true;
     this.mapPart = Loc.MapPartCenote;
     this.setExitBi( "este", locSalaRecibidor );
     this.objs.push( objMaderos );
@@ -301,6 +399,7 @@ const locGranSala = ctrl.places.creaLoc(
 
 locGranSala.ini = function() {
     this.mapPart = Loc.PartMapCenote;
+    this.light = false;
 
     this.setExit( "norte", locAlmacen );
     this.setExitBi( "sur", locBalcon );
@@ -341,6 +440,7 @@ locFalla.preExamine = function() {
 
 locFalla.ini = function() {
     this.mapPart = Loc.MapPartCenote;
+    this.light = false;
 
     this.setExit( "norte", locCruceDePasajes );
     this.setExit( "sur", locPasajeAgrietado );
@@ -378,6 +478,7 @@ const locPasajeAgrietado = ctrl.places.creaLoc(
 
 locPasajeAgrietado.ini = function() {
     this.mapPart = Loc.MapPartCenote;
+    this.light = false;
     this.setExitBi( "norte", locFalla );
 };
 
@@ -432,6 +533,7 @@ const locPlataforma = ctrl.places.creaLoc(
 
 locPlataforma.ini = function() {
     this.pathShown = false;
+    this.light = true;
     this.mapPart = Loc.MapPartCenote;
     this.pic = "res/cenote_plataforma.jpg";
 };
@@ -528,6 +630,7 @@ const locPresa = ctrl.places.creaLoc(
 
 locPresa.ini = function() {
     this.mapPart = Loc.MapPartCenote;
+    this.light = false;
 
     this.setExit( "norte", locSalaRecibidor );
     this.setExit( "este", locSalaReducida );
@@ -569,6 +672,7 @@ const locRecodoEnLasEscaleras = ctrl.places.creaLoc(
 
 locRecodoEnLasEscaleras.ini = function() {
     this.mapPart = Loc.MapPartCenote;
+    this.light = true;
     this.pic = "res/cenote_recodo_escaleras.jpg";
     this.setExitBi( "sur", locBordeDelCenote );
     this.setExitBi( "arriba", locBordeDelCenote );
@@ -592,6 +696,7 @@ const locSalaCircular = ctrl.places.creaLoc(
 
 locSalaCircular.ini = function() {
     this.mapPart = Loc.MapPartCenote;
+    this.light = false;
 
     this.setExitBi( "oeste", locSalaRecibidor );
     this.objs.push( objSoportes );
@@ -622,6 +727,7 @@ const locSalaDelTrono = ctrl.places.creaLoc(
 
 locSalaDelTrono.ini = function() {
     this.mapPart = Loc.MapPartCenote;
+    this.light = false;
     this.setExitBi( "oeste", locSalaCircular );
 };
 
@@ -642,6 +748,7 @@ const locSalaRecibidor = ctrl.places.creaLoc(
 
 locSalaRecibidor.ini = function() {
     this.mapPart = Loc.MapPartCenote;
+    this.light = false;
 
     this.setExitBi( "norte", locPasajeAgrietado );
     this.setExitBi( "sur", locAcuifero );
@@ -730,6 +837,7 @@ const locSalaReducida = ctrl.places.creaLoc(
 
 locSalaReducida.ini = function() {
     this.mapPart = Loc.PartMapCenote;
+    this.light = false;
 
     locSalaReducida.setExit( "oeste", locPresa );
 };
@@ -835,6 +943,39 @@ pnjLaura.ini = function() {
      */
     this.states = [ 0, 0, 0 ];
     this.startMovingWithPlayer();
+    ctrl.addDaemon( "I_NEED_LIGHT", function() {
+        const loc = ctrl.places.getCurrentLoc();
+
+        if ( !loc.light )
+        {
+            if ( loc == locSalaRecibidor ) {
+                ctrl.goto( locCueva );
+                ctrl.print( "Laura comienza a pegarse a las paredes, \
+                             palpando en su alrededor." );
+                pnjLaura.say( "Está demasiado oscuro... no puedo..." );
+                ctrl.print( "Retrocedes siguiendo a Laura... está claro\
+                           que no soporta la oscuridad." );
+            } else {
+                endGame( "<p><p>Laura empieza a hablar nerviosamente...\
+                            <br/>&mdash;No puedo... no puedo.. ¡no puedo ver!</p>\
+                            <p>Antes de que puedas evitarlo, la chica \
+                            sale corriendo.</p>\
+                            <p>&mdash;Tengo que salir... ¡TENGO QUE SALIR DE AQUÍ!</p>\
+                            <p>Intentas seguir a Laura, pero a oscuras \
+                            es muy complicado hacerlo sin tropezar y \
+                            caer...</p>\
+                            <p>&mdash;¡AHHHHHHHHHHHH!</p>\
+                            <p>&mdash;¡Laura! ... ¡LAURA!</p>\
+                            <p>Aunque no quieres creerlo, sabes \
+                            perfectamente lo que ha pasado. Intentas \
+                            localizarla por donde escuchaste el grito, \
+                            pero sabes que lo más probable es que tú también \
+                            termines cayendo...</p>",
+                            "res/balcon.jpg" );
+            }
+
+        }
+    });
 };
 
 pnjLaura.getAppropriateStatus = function() {
@@ -941,6 +1082,31 @@ pnjLaura.preTalk = function() {
 
     return;
 };
+
+
+// ================================================================== End
+function endGame(txt, imagePath)
+{
+    const dvCmds = document.getElementById( "dvCmds" );
+
+    dvCmds.style.display = "none";
+    txt += "<p style='text-align: right'>\
+            <a href='javascript: location.reload()'>Recomenzar.</a>\
+            <details style='text-align: right'><summary>Curiosidades.</summary>\
+                <p>\
+                    <p>Este relato interactivo fue escrito\
+                    para la RayuelaJAM'2022.</p>\
+                La idea vino dada por una mezcla de Cozumel (la famosa \
+                aventura de AD), y de una fascinación por los Cenotes \
+                mayas.<br/>\
+                Espero que resulte entretenida, tanto como a mi lo fue \
+                su creación.\
+                </p>\
+            </details>\
+            </p>";
+
+    ctrl.endGame( txt, imagePath );
+}
 
 
 // ================================================================== Start
