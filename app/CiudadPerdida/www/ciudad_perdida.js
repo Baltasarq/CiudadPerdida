@@ -27,7 +27,8 @@ const locAcuifero = ctrl.places.creaLoc(
     "Acuífero",
     [ "acuifero" ],
     "Un ${río, ex rio} subterráneo \
-     corre de ${este, este} a ${oeste, oeste}."
+     corre de ${este, este} a ${oeste, oeste}. Un estrecho túnel permite el paso \
+     hacia el ${norte, norte}."
 );
 
 locAcuifero.ini = function() {
@@ -92,10 +93,20 @@ const objAntorchas = ctrl.creaObj(
     Ent.Scenery
 );
 
+objAntorchas.preExamine = function() {
+    let toret = this.desc;
+
+    if ( ctrl.places.limbo.has( objAntorcha ) ) {
+        toret += " Podrías ${coger una antorcha, coge antorcha} para reemplazar la tuya.";
+    }
+
+    return toret;
+};
+
 objAntorchas.preTake = function() {
     let toret = "¿Para qué? Tu antorcha aún sirve.";
 
-    if ( ctrl.places.limbo( objAntorcha ) ) {
+    if ( ctrl.places.limbo.has( objAntorcha ) ) {
         toret = "Tomas otra antorcha de las muchas aquí.";
         objAntorcha.moveTo( ctrl.personas.getPlayer()  );
         objAntorcha.light();
@@ -106,9 +117,9 @@ objAntorchas.preTake = function() {
 
 const objAntorcha = ctrl.creaObj(
     "antorcha",
-    [ "tea" ],
+    [ "tea", "luz", "fuego", "lumbre" ],
     "A estas alturas, está más seca que otra cosa, con el combustible \
-     ya casi agotado. Va a durar poco.",
+     ya casi agotado, haciendo que su duración sea limitada.",
     ctrl.places.limbo,
     Ent.Portable
 );
@@ -119,7 +130,7 @@ objAntorcha.preExamine = function() {
     if ( this.isLit ) {
         toret += " Todavía arde.";
     } else {
-        toret += " Apagada.";
+        toret += " Está apagada.";
     }
 
     return toret;
@@ -129,49 +140,92 @@ objAntorcha.ini = function() {
     this.moveTo( locCueva );
     this.MAX_LIFE = 10;
     this.isLit = false;
+    this.bikiniEncendedorDicho = false;
 };
 
 objAntorcha.light = function() {
-    this.turnsWhenLit = ctrl.getTurns();
+    const player = ctrl.personas.getPlayer();
+    const pnjLaura = ctrl.personas.getPersonaById( "Laura" );
+    let toret = "La tea arde ágil y con mucha luz.";
 
-    ctrl.addDaemon( "ANTORCHA_PER_TURN", function() {
-        const life = this.MAX_LIFE - ( ctrl.getTurns() - this.turnsWhenLit );
-        let toret = "";
+    if ( !ctrl.isPresent( objAntorcha ) ) {
+        return "No la tienes a mano...";
+    }
 
-        if ( life <= 8 ) {
-            toret = "La antorcha empieza a dar signos \
-                     de agotamiento... Pequeños chisporroteos te \
-                     indican que el propio material se consume ya, \
-                     y se apagará en breve.";
-        }
-        else
-        if ( life <= 5 ) {
-            toret = "Los contínuos chisporroteos en la antorcha \
-                     te indican que su final está cerca... \
-                     ¡necesitas otra!";
-        }
-        else
-        if ( life < 1 ) {
-            toret = "La antorcha se ha apagado... ¡estás a oscuras!";
-            this.isLit = false;
-            ctrl.removeDaemon( "ANTORCHA_PER_TURN" );
-            this.moveTo( ctrl.places.limbo );
+    player.say( "Querría encender la antorcha..." );
+
+    if ( this.isLit ) {
+        ctrl.print( "Laura te mira socarrona..." );
+        pnjLaura.say( "¿Para qué, vaquero? No se ha apagado..." );
+        toret = "¡La antorcha está ya ardiendo!";
+    } else {
+        this.isLit = true;
+        this.turnsWhenLit = ctrl.getTurns();
+
+        ctrl.print( "De algún lugar, Laura saca un encendedor \
+                     y prende la tea." );
+        pnjLaura.say( "¡Fantástico, ahora tenemos luz!" );
+
+
+        if ( !this.bikiniEncendedorDicho ) {
+            this.bikiniEncendedorDicho = true;
+            ctrl.print( "Miras hacia la antorcha durante unos tensos segundos, \
+                        consciente de que Laura se estará guardando \
+                        otra vez el mechero en alguna parte de su reducido bikini... \
+                        y sientes sentimientos encontrados sobre mirar o no. \
+                        Finalmente, decides no hacerlo." );
+        } else {
+            ctrl.print( "Disimulas mientras te preguntas de nuevo dónde guardará \
+                         el encendedor... intentas sacudir estas preguntas fuera \
+                         de tu mente." );
         }
 
-        if ( ctrl.isPresent( this  ) ) {
-            ctrl.print( toret );
-        }
-    });
+        ctrl.addDaemon( "Antorcha::porCadaTurno", function() {
+            const life = objAntorcha.MAX_LIFE
+                            - ( ctrl.getTurns() - objAntorcha.turnsWhenLit );
+            let toret = "";
 
-    return "La tea arde ágil y con mucha luz.";
+            if ( life < 1 ) {
+                toret = "La antorcha se ha apagado... la descartas antes \
+                        de que las chispas te quemen... ¡estás a oscuras!";
+                objAntorcha.isLit = false;
+                ctrl.removeDaemon( "Antorcha::porCadaTurno" );
+                objAntorcha.moveTo( ctrl.places.limbo );
+            }
+            else
+            if ( life <= 5 ) {
+                toret = "Los contínuos chisporroteos en la antorcha \
+                        te indican que su final está cerca... \
+                        ¡necesitas otra!";
+            }
+            else
+            if ( life <= 8 ) {
+                toret = "La antorcha empieza a dar signos \
+                        de agotamiento... Pequeños chisporroteos te \
+                        indican que el propio material se consume ya, \
+                        y se apagará en breve.";
+            }
+
+            if ( ctrl.isPresent( objAntorcha ) ) {
+                ctrl.print( toret );
+            }
+        });
+    }
+
+    return toret;
 };
 
 objAntorcha.preDrop = function() {
     this.isLit = false;
-    ctrl.removeDaemon( "ANTORCHA_PER_TURN" );
+    ctrl.removeDaemon( "Antorcha::porCadaTurno" );
+    this.moveTo( ctrl.places.limbo );
 
     return "La antorcha se apaga entre pequeños chispazos \
             al caer al suelo.";
+};
+
+objAntorcha.preStart = function() {
+    return this.light();
 };
 
 
@@ -229,6 +283,16 @@ locBalcon.preGo = function() {
 
     return toret;
 };
+
+const objSimaBalcon = ctrl.creaObj(
+    "sima",
+    [ "sima", "abismo" ],
+    "El fondo abisal se abre a tus pies. Dicen que no puedes mirar \
+     al abismo sin que el abismo te devuelve la mirada... \
+     ¿Por qué de repente te entran tantas ganas de ${saltar, sur}?",
+    locBalcon,
+    Ent.Scenery
+);
 
 
 // ----------------------------------------------------------- locBordeCenote
@@ -432,7 +496,7 @@ locFalla.preExamine = function() {
     if ( this.getTimesExamined() <= 1 ) {
         toret += " Parece que la falla es la que en algún momento \
                   provocó la grieta que se abrió a través de la gran \
-                  sala al sur.";
+                  sala al ${sur, sur}.";
     }
 
     return toret;
@@ -449,7 +513,7 @@ locFalla.ini = function() {
 const objPuente = ctrl.creaObj(
     "puente",
     [ "puente" ],
-    "Dos contrafuertes se alzan desde sendos bordes de la grieta, \
+    "Dos contrafuertes se alzan desde sendos bordes de la falla, \
      y se unen en su parte superior en una suerte de rampa. \
      La subida y bajada resulta abrupta, pero definitivamente posible. \
      Por el puente se puede acceder al ${norte, norte}.",
@@ -471,8 +535,8 @@ const locPasajeAgrietado = ctrl.places.creaLoc(
     "Pasaje agrietado",
     [ "pasaje agrietado" ],
     "El pasaje de ${norte, norte} a ${sur, sur} \
-     parece un antiguo túnel del que se ha desprendido \
-     el techo del que solo quedan ${escombros, ex escombros}. \
+     parece un antiguo túnel, distinto al de las grandes salas al ${sur, sur}, \
+     del que se ha desprendido el techo del que solo quedan ${escombros, ex escombros}. \
      Así, la forma es de un bajo pasillo con forma triangular."
 );
 
@@ -749,6 +813,7 @@ const locSalaRecibidor = ctrl.places.creaLoc(
 locSalaRecibidor.ini = function() {
     this.mapPart = Loc.MapPartCenote;
     this.light = false;
+    this.pic = "res/sala_recibidor.jpg";
 
     this.setExitBi( "norte", locPasajeAgrietado );
     this.setExitBi( "sur", locAcuifero );
@@ -783,8 +848,11 @@ objParedes.preExamine = function() {
 
     if ( ctrl.places.limbo.has( objGrieta ) ) {
         ++this.intentosEx;
+        pnjLaura.say( "Aquí debe de haber algo..." );
+        ctrl.print( "Laura también se centra en las paredes. \
+                     Las palpa suavemente con sus manos." );
+
         if ( this.intentosEx > 2 ) {
-            ctrl.print( "Laura palpa las paredes suavemente con sus manos." );
             pnjLaura.say( "¡Anda! ¿Te has fijado en esto?" );
             toret = " Sigues las indicaciones de Laura. \
                     Examinando con atención de nuevo los muros, \
@@ -804,7 +872,8 @@ const objGrieta = ctrl.creaObj(
     [ "socavon" ],
     "Una grieta corre de ${norte, norte} a ${sur, sur}, permitiendo \
      el acceso más allá de esta sala. Si en las paredes crea pequeñas \
-     aberturas verticales, en el suelo supone solo un ligero desnivel \
+     aberturas verticales por las que una persona se podría meter, \
+     en el suelo en cambio supone solo un ligero desnivel \
      que ni siquiera es necesario salvar.",
     ctrl.places.limbo,
     Ent.Scenery
@@ -917,12 +986,12 @@ const pnjLaura = ctrl.personas.creaPersona(
 );
 
 pnjLaura.stopMovingWithPlayer = function() {
-    ctrl.removeDaemon( "LauraWithPlayer" );
+    ctrl.removeDaemon( "Laura::withPlayer" );
 };
 
 pnjLaura.startMovingWithPlayer = function() {
-    if ( ctrl.getDaemon( "LauraWithPlayer" ) == null ) {
-        ctrl.addDaemon( "LauraWithPlayer", function() {
+    if ( ctrl.getDaemon( "Laura::withPlayer" ) == null ) {
+        ctrl.addDaemon( "Laura::withPlayer", function() {
             const player = ctrl.personas.getPlayer();
 
             if ( this.owner != player.owner ) {
@@ -943,10 +1012,12 @@ pnjLaura.ini = function() {
      */
     this.states = [ 0, 0, 0 ];
     this.startMovingWithPlayer();
-    ctrl.addDaemon( "I_NEED_LIGHT", function() {
+    ctrl.addDaemon( "Laura::needsLight", function() {
         const loc = ctrl.places.getCurrentLoc();
 
-        if ( !loc.light )
+        if ( !loc.light
+          && !ctrl.isPresent( objAntorcha )
+          && !objAntorcha.isLit )
         {
             if ( loc == locSalaRecibidor ) {
                 ctrl.goto( locCueva );
