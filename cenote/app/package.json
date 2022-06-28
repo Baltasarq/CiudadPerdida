@@ -1,8 +1,8 @@
 {
-  "name": "com.devbaltasarq.paititi",
-  "displayName": "Paititi",
+  "name": "com.devbaltasarq.cenote",
+  "displayName": "Ciudad Perdida I",
   "version": "1.0.0",
-  "description": "En busca de la ciudad perdida.",
+  "description": "En busca de la ciudad perdida, episodio 1.",
   "main": "index.html",
   "author": "Baltasar",
   "license": "MIT",

@@ -4,18 +4,6 @@
     Thu May 12 18:56:50 2022
 */
 
-
-ctrl.setTitle( "La ciudad perdida" );
-ctrl.setPic( "res/portada.jpg" );
-ctrl.setAuthor( "baltasarq@gmail.com" );
-ctrl.setVersion( "0.1 20220509" );
-ctrl.setIntro( "<p>Episodio 1<br/>\
-                   Recibes la llamada de la hija de un explorador \
-                   del siglo pasado para recuperar las pistas dejadas \
-                   por él y poder encontrar \
-                   la ciudad perdida de Chactun.</p>" );
-
-
 // ================================================================== Locs
 // The part of the map.
 Loc.MapPartGeneral = 100;
@@ -33,13 +21,29 @@ const locAcuifero = ctrl.places.creaLoc(
 
 locAcuifero.ini = function() {
     this.mapPart = Loc.MapPartCenote;
+    this.pic = "res/acuifero.jpg";
     this.light = false;
+};
+
+locAcuifero.preGo = function() {
+    const goAction = actions.getAction( "go" );
+    let toret = "No se puede.";
+
+    if ( parser.sentence.term1 == "oeste" ) {
+        toret = "El acuífero continúa hacia el oeste, pero llega \
+                 un punto en el que desciende por debajo de una \
+                 pared de roca.";
+    } else {
+        toret = goAction.exe( parser.sentence );
+    }
+
+    return toret;
 };
 
 const objRio = ctrl.creaObj(
     "rio",
     [ "rio" ],
-    "El agua circula con fuerza hacia el ${oeste, oeste}, \
+    "El agua circula con fuerza hacia el ${este, este}, \
 	 hacia donde la caverna, sin arcos, marcos o adornos de ningún tipo, \
      se estrecha dejando apenas paso para el agua \
      y una pequeña ${senda, ex senda}.",
@@ -62,16 +66,42 @@ const objSenda = ctrl.creaObj(
 const locAlmacen = ctrl.places.creaLoc(
     "Almacén",
     [ "almacen" ],
-    "Contra los muros de esta sala se apilan \
+    "Contra uno de los muros de esta sala se apilan \
      diferentes ${útiles y materiales, ex materiales}, \
      dejando libres nuevos accesos \
-     al ${norte, norte}, ${sur, sur}, ${este, este} y ${oeste, oeste}."
+     al ${norte, norte}, ${sur, sur}, ${este, este} y ${oeste, oeste}. \
+     Parecen haber allanado el suelo, hasta el punto de encontrarlo \
+     liso. Una suave luz inunda la cueva, "
 );
 
 locAlmacen.ini = function() {
     this.mapPart = Loc.MapPartCenote;
+    this.pic = "res/cruce_caverna2.jpg";
     this.light = true;
     this.setExit( "norte", locCruceDePasajes );
+};
+
+locAlmacen.preGo = function() {
+    const sentence = parser.sentence;
+    const goAction = actions.getAction( "go" );
+    const pnjLaura = ctrl.personas.getPersonaById( "Laura" );
+    const player = ctrl.personas.getPlayer();
+    let toret = "";
+
+    if ( sentence.act == goAction
+      && ( objAntorcha.owner != player
+        || !objAntorcha.isLit ) )
+    {
+        ctrl.print( "Laura de repente se coloca frente a ti." );
+        pnjLaura.say( "¡No tenemos luz!" );
+        ctrl.print( "Puedes ver la ancgustia en sus ojos." );
+        ctrl.print( "Y tiene razón: no podríais adentraros \
+                     en la oscuridad sin una antorcha." );
+    } else {
+        toret = goAction.exe( parser.sentence );
+    }
+
+    return toret;
 };
 
 const objMateriales = ctrl.creaObj(
@@ -96,23 +126,24 @@ const objAntorchas = ctrl.creaObj(
 objAntorchas.preExamine = function() {
     let toret = this.desc;
 
-    if ( ctrl.places.limbo.has( objAntorcha ) ) {
-        toret += " Podrías ${coger una antorcha, coge antorcha} para reemplazar la tuya.";
+    toret += " Podrías ${coger una antorcha, coge antorchas} \
+                para reemplazar la tuya";
+
+    if ( objAntorcha.getLife() > 20 ) {
+        toret += ", aunque la tuya aún aguanta.";
+    } else {
+        toret += ", no está de más ser precavido.";
     }
 
     return toret;
 };
 
 objAntorchas.preTake = function() {
-    let toret = "¿Para qué? Tu antorcha aún sirve.";
+    objAntorcha.turnOff();
+    objAntorcha.moveTo( ctrl.personas.getPlayer()  );
+    objAntorcha.light();
 
-    if ( ctrl.places.limbo.has( objAntorcha ) ) {
-        toret = "Tomas otra antorcha de las muchas aquí.";
-        objAntorcha.moveTo( ctrl.personas.getPlayer()  );
-        objAntorcha.light();
-    }
-
-    return toret;
+    return "Tomas otra antorcha de las muchas que hay aquí.";
 };
 
 const objAntorcha = ctrl.creaObj(
@@ -138,9 +169,29 @@ objAntorcha.preExamine = function() {
 
 objAntorcha.ini = function() {
     this.moveTo( locCueva );
-    this.MAX_LIFE = 10;
+    this.MAX_LIFE = 30;
     this.isLit = false;
     this.bikiniEncendedorDicho = false;
+    this.acercaAntorcha = false;
+};
+
+objAntorcha.getLife = function() {
+    let toret = this.MAX_LIFE
+                - ( ctrl.getTurns() - this.turnsWhenLit );
+
+    if ( !this.isLit
+      || toret < 0  )
+    {
+        toret = 0;
+    }
+
+    return toret;
+};
+
+objAntorcha.turnOff = function() {
+    this.isLit = false;
+    ctrl.removeDaemon( "Antorcha::porCadaTurno" );
+    this.moveTo( ctrl.places.limbo );
 };
 
 objAntorcha.light = function() {
@@ -157,53 +208,72 @@ objAntorcha.light = function() {
     if ( this.isLit ) {
         ctrl.print( "Laura te mira socarrona..." );
         pnjLaura.say( "¿Para qué, vaquero? No se ha apagado..." );
-        toret = "¡La antorcha está ya ardiendo!";
+        toret = "¡La antorcha está ardiendo!";
     } else {
+        if ( this.getLife() < 1 ) {
+            ctrl.print( "De algún lugar, Laura saca un encendedor \
+                        y prende la tea." );
+            pnjLaura.say( "¡Fantástico, ahora tenemos luz!" );
+
+            if ( !this.bikiniEncendedorDicho ) {
+                this.bikiniEncendedorDicho = true;
+                ctrl.print( "Miras hacia la antorcha durante unos tensos segundos, \
+                            consciente de que Laura se estará guardando \
+                            otra vez el mechero en alguna parte de su reducido bikini... \
+                            y tienes sentimientos encontrados sobre mirar o no. \
+                            Finalmente, decides no hacerlo." );
+            } else {
+                ctrl.print( "Disimulas mientras te preguntas de nuevo dónde guardará \
+                            el encendedor... intentas sacudir estas preguntas fuera \
+                            de tu mente." );
+            }
+        } else {
+            if ( !this.acercaAntorcha ) {
+                ctrl.print( "Laura acerca una antorcha a la otra." );
+                pnjLaura.say( "Pues ya está..." );
+                ctrl.print( "Errr... pues sí. Gracias." );
+            } else {
+                ctrl.print( "Acercas una antorcha a la otra...");
+            }
+        }
+
         this.isLit = true;
         this.turnsWhenLit = ctrl.getTurns();
 
-        ctrl.print( "De algún lugar, Laura saca un encendedor \
-                     y prende la tea." );
-        pnjLaura.say( "¡Fantástico, ahora tenemos luz!" );
-
-
-        if ( !this.bikiniEncendedorDicho ) {
-            this.bikiniEncendedorDicho = true;
-            ctrl.print( "Miras hacia la antorcha durante unos tensos segundos, \
-                        consciente de que Laura se estará guardando \
-                        otra vez el mechero en alguna parte de su reducido bikini... \
-                        y sientes sentimientos encontrados sobre mirar o no. \
-                        Finalmente, decides no hacerlo." );
-        } else {
-            ctrl.print( "Disimulas mientras te preguntas de nuevo dónde guardará \
-                         el encendedor... intentas sacudir estas preguntas fuera \
-                         de tu mente." );
-        }
-
         ctrl.addDaemon( "Antorcha::porCadaTurno", function() {
-            const life = objAntorcha.MAX_LIFE
-                            - ( ctrl.getTurns() - objAntorcha.turnsWhenLit );
+            let life = objAntorcha.getLife();
             let toret = "";
+
+            if ( !ctrl.isPresent( objAntorcha ) ) {
+                life = 0;
+            }
 
             if ( life < 1 ) {
                 toret = "La antorcha se ha apagado... la descartas antes \
                         de que las chispas te quemen... ¡estás a oscuras!";
-                objAntorcha.isLit = false;
-                ctrl.removeDaemon( "Antorcha::porCadaTurno" );
-                objAntorcha.moveTo( ctrl.places.limbo );
+                objAntorcha.turnOff();
             }
             else
-            if ( life <= 5 ) {
-                toret = "Los contínuos chisporroteos en la antorcha \
-                        te indican que su final está cerca... \
-                        ¡necesitas otra!";
+            if ( life == 5 ) {
+                pnjLaura.say( "¡Necesitamos otra antorcha!" );
+                ctrl.print( "Laura parece realmente atemorizada..." );
+                toret = "Efectivamente, los contínuos chisporroteos \
+                         en la antorcha te indican que su final está cerca...";
             }
             else
-            if ( life <= 8 ) {
+            if ( life == 8 ) {
                 toret = "La antorcha empieza a dar signos \
                         de agotamiento... Pequeños chisporroteos te \
                         indican que el propio material se consume ya, \
                         y se apagará en breve.";
+            }
+            else
+            if ( life == ( objAntorcha.MAX_LIFE / 2 ) ) {
+                player.say( "Me parece que hemos consumido ya \
+                             la mitad del combustible de \
+                             la antorcha." );
+                ctrl.print( "Laura abre muchos los ojos..." );
+                pnjLaura.say( "Tendremos que buscar otra, entonces." );
             }
 
             if ( ctrl.isPresent( objAntorcha ) ) {
@@ -216,9 +286,7 @@ objAntorcha.light = function() {
 };
 
 objAntorcha.preDrop = function() {
-    this.isLit = false;
-    ctrl.removeDaemon( "Antorcha::porCadaTurno" );
-    this.moveTo( ctrl.places.limbo );
+    this.turnOff();
 
     return "La antorcha se apaga entre pequeños chispazos \
             al caer al suelo.";
@@ -339,12 +407,14 @@ const locCruceDePasajes = ctrl.places.creaLoc(
     [ "cruce de pasajes" ],
     "En esta pequeña sala pueden encontrarse ${túneles, ex tuneles} \
      que permiten moverse al ${norte, norte}, ${sur, sur}, ${este, este} \
-     y ${oeste, oeste}."
+     y ${oeste, oeste}. El ${agua, ex agua} cubre el suelo \
+     con una fina película."
 );
 
 locCruceDePasajes.ini = function() {
     this.mapPart = Loc.PartMapCenote;
     this.light = false;
+    this.pic = "res/cruce_caverna.jpg";
 
     this.setExitBi( "norte", locAlmacen );
     this.setExitBi( "oeste", locAlmacen );
@@ -360,6 +430,24 @@ const objTuneles = ctrl.creaObj(
     locCruceDePasajes,
     Ent.Scenery
 );
+
+const objAguaCrucePasajes = ctrl.creaObj(
+    "suelo",
+    [ "agua" ],
+    "El agua cubre todo el suelo de manera uniforme.",
+    locCruceDePasajes,
+    Ent.Scenery
+);
+
+objAguaCrucePasajes.preExamine = function() {
+    const pnjLaura = ctrl.personas.getPersonaById( "Laura" );
+    const player = ctrl.personas.getPlayer();
+
+    player.say( "¿De dónde saldrá este agua?" );
+    pnjLaura.say( "Parece como si se filtrara por las paredes." );
+
+    return this.desc;
+};
 
 
 // ---------------------------------------------------------------- locCueva
@@ -393,9 +481,20 @@ locCueva.preGo = function() {
         objPrendasLaura.moveTo( ctrl.places.limbo );
         ctrl.goto( locPlataforma );
     } else {
-        const goAction = actions.getAction( "go" );
+        if ( objAntorcha.owner != ctrl.personas.getPlayer()
+          || !objAntorcha.isLit )
+        {
+            ctrl.goto( locCueva );
+            ctrl.print( "Laura comienza a pegarse a las paredes, \
+                         palpando en su alrededor." );
+            pnjLaura.say( "Está demasiado oscuro... no puedo..." );
+            ctrl.print( "Retrocedes siguiendo a Laura... está claro\
+                       que no soporta la oscuridad." );
+        } else {
+            const goAction = actions.getAction( "go" );
 
-        toret = goAction.exe( parser.sentence );
+            toret = goAction.exe( parser.sentence );
+        }
     }
 
     return toret;
@@ -417,7 +516,7 @@ const objRampa = ctrl.creaObj(
     "De piedras que notas suaves al tacto, \
      probablemente por la cantidad de pequeñas algas \
      que alfombran su superficie, \
-     lo que los hace bastante resbaladizos.",
+     lo que las hace bastante resbaladizas.",
     locCueva,
     Ent.Scenery
 );
@@ -445,7 +544,10 @@ const objDintel = ctrl.creaObj(
     [ "dintel" ],
     "Aprovechando un pasaje en la cueva, \
      se ha construído un marco alrededor, \
-     orlado con distintos motivos solares.",
+     orlado con distintos motivos solares. \
+     La luminosidad que emana de las \
+     ${paredes, ex paredes} le da un aspecto \
+     extraño.",
     locCueva,
     Ent.Scenery
 );
@@ -458,17 +560,39 @@ const locGranSala = ctrl.places.creaLoc(
     "Esta gran caverna no cuenta con ningún tipo de decoración, \
      excepto en los ${accesos, ex accesos} hacia \
      el ${norte, norte}, ${sur, sur}, ${este, este}, ${oeste, oeste} \
-     y ${sur, sur}."
+     y ${sur, sur}. Aquí el ${agua, ex agua} \
+     llega casi hasta las rodillas."
 );
 
 locGranSala.ini = function() {
     this.mapPart = Loc.PartMapCenote;
     this.light = false;
+    this.pic = "res/caverna_agua2.jpg";
 
     this.setExit( "norte", locAlmacen );
     this.setExitBi( "sur", locBalcon );
     this.setExitBi( "este", locAlmacen );
     this.setExit( "oeste", locCruceDePasajes );
+};
+
+const objAguaGranSala = ctrl.creaObj(
+    "agua",
+    [ "suelo" ],
+    "El agua cubre más allá de los tobillos.",
+    locGranSala,
+    Ent.Scenery
+);
+
+objAguaGranSala.preExamine = function() {
+    const pnjLaura = ctrl.personas.getPersonaById( "Laura" );
+    const player = ctrl.personas.getPlayer();
+    let toret = this.desc;
+
+    player.say( "¿Te has fijado en lo que cubre aquí el agua?" );
+    ctrl.print( "Ella arruga el entrecejo." );
+    pnjLaura.say( "Y de nuevo parece filtrarse desde las paredes..." );
+
+    return toret;
 };
 
 const objAccesos = ctrl.creaObj(
@@ -490,6 +614,14 @@ const locFalla = ctrl.places.creaLoc(
      mientras ${sur, sur} se encuentra un pequeño pasadizo."
 );
 
+locFalla.ini = function() {
+    this.mapPart = Loc.MapPartCenote;
+    this.light = false;
+    this.pic = "res/falla.jpg";
+    this.setExit( "norte", locCruceDePasajes );
+    this.setExit( "sur", locPasajeAgrietado );
+};
+
 locFalla.preExamine = function() {
     let toret = locFalla.desc;
 
@@ -500,14 +632,6 @@ locFalla.preExamine = function() {
     }
 
     return toret;
-};
-
-locFalla.ini = function() {
-    this.mapPart = Loc.MapPartCenote;
-    this.light = false;
-
-    this.setExit( "norte", locCruceDePasajes );
-    this.setExit( "sur", locPasajeAgrietado );
 };
 
 const objPuente = ctrl.creaObj(
@@ -542,6 +666,7 @@ const locPasajeAgrietado = ctrl.places.creaLoc(
 
 locPasajeAgrietado.ini = function() {
     this.mapPart = Loc.MapPartCenote;
+    this.pic = "res/pasaje.jpg";
     this.light = false;
     this.setExitBi( "norte", locFalla );
 };
@@ -694,11 +819,11 @@ const locPresa = ctrl.places.creaLoc(
 
 locPresa.ini = function() {
     this.mapPart = Loc.MapPartCenote;
+    this.pic = "res/presa.jpg";
     this.light = false;
 
     this.setExit( "norte", locSalaRecibidor );
-    this.setExit( "este", locSalaReducida );
-    this.setExit( "oeste", locAcuifero );
+    this.setExit( "este", locTunel );
     this.setExitBi( "oeste", locAcuifero );
 };
 
@@ -715,10 +840,42 @@ const objAbertura = ctrl.creaObj(
 const objAcuifero = ctrl.creaObj(
     "acuifero",
     [ "acuifero" ],
-    "El agua va ganando fuerza hacia el ${este, este}.",
+    "El agua va ganando fuerza hacia el ${oeste, oeste}.",
     locPresa,
     Ent.Scenery
 );
+
+
+// --------------------------------------------------------- locCorredorAcuifero
+const locCorredorAcuifero = ctrl.places.creaLoc(
+    "Corredor del acuífero",
+    [],
+    ""
+);
+
+locCorredorAcuifero.ini = function() {
+    this.mapPart = Loc.MapPartCenote;
+    this.pic = "res/corredor_acuifero.jpg";
+    this.light = false;
+
+    this.setExitBi( "sur", locPresa );
+};
+
+
+// ------------------------------------------------------------- locCisterna
+const locCisterna = ctrl.places.creaLoc(
+    "Cisterna",
+    [],
+    ""
+);
+
+locCisterna.ini = function() {
+    this.mapPart = Loc.MapPartCenote;
+    this.pic = "res/piscina.jpg";
+    this.light = false;
+
+    this.setExitBi( "norte", locPresa );
+};
 
 
 // ------------------------------------------------------- locRecodoEscaleras
@@ -751,7 +908,9 @@ const locSalaCircular = ctrl.places.creaLoc(
     [ "sala circular" ],
     "Aunque no lo parecía desde el exterior, \
     esta sala tiene una curiosa forma redonda y alargada. \
-    Las ${paredes, ex paredes} norte y sur se ensanchan \
+    Los muros de la caverna no están revestidos de piedra \
+    ni decorados de ninguna manera. \
+    Los ${muros, ex paredes} norte y sur se ensanchan \
     en sendos semicírculos, mientras los extremos ${este, este} \
     y ${oeste, oeste} mantienen su tamaño normal. \
     También hay ${portuberancias, ex portuberancias} \
@@ -760,6 +919,7 @@ const locSalaCircular = ctrl.places.creaLoc(
 
 locSalaCircular.ini = function() {
     this.mapPart = Loc.MapPartCenote;
+    this.pic = "res/sala_circular.jpg";
     this.light = false;
 
     this.setExitBi( "oeste", locSalaRecibidor );
@@ -791,6 +951,7 @@ const locSalaDelTrono = ctrl.places.creaLoc(
 
 locSalaDelTrono.ini = function() {
     this.mapPart = Loc.MapPartCenote;
+    this.pic = "res/sala_trono.jpg";
     this.light = false;
     this.setExitBi( "oeste", locSalaCircular );
 };
@@ -894,21 +1055,40 @@ const objSoportes = ctrl.creaObj(
 );
 
 
+// ----------------------------------------------------------- locTunel
+const locTunel = ctrl.places.creaLoc(
+    "Túnel",
+    [ "tunel" ],
+    "El túnel excavado en la roca, sin ornamentos de ningún tipo, \
+     une de forma inclinada una sala en la parte ${inferior, abajo} \
+     con otra en la parte ${superior, arriba}. "
+);
+
+locTunel.ini = function() {
+    this.mapPart = Loc.PartMapCenote;
+    this.light = false;
+    this.pic = "res/tunel.jpg";
+
+    this.setExit( "abajo", locPresa );
+    this.setExit( "arriba", locSalaReducida );
+};
+
+
 // ----------------------------------------------------------- locSalaReducida
 const locSalaReducida = ctrl.places.creaLoc(
     "Sala reducida",
     [ "sala reducida" ],
-    "Solo puedes ver cómo el agua desciende por debajo \
-     del nivel de la ${pared de piedra, ex pared} \
-     que corta el acceso hacia el ${este, este}. \
-     La única salida parece estar al ${oeste, oeste}."
+    "El túnel se abre a una pequeña sala en la que puedes ver \
+     una pequeña caída de agua... no hay forma alguna de \
+     continuar. La única salida parece estar al ${oeste, oeste}."
 );
 
 locSalaReducida.ini = function() {
     this.mapPart = Loc.PartMapCenote;
     this.light = false;
+    this.pic = "res/fin_caverna.jpg";
 
-    locSalaReducida.setExit( "oeste", locPresa );
+    this.setExit( "oeste", locTunel );
 };
 
 const objParedDePiedra = ctrl.creaObj(
@@ -924,7 +1104,7 @@ const objParedDePiedra = ctrl.creaObj(
 
 // ------------------------------------------------------------------- Player
 const player = ctrl.personas.creaPersona(
-    "Explorador",
+    "Pablo",
     [ "explorador" ],
     "Pablo Salcedo, explorador de varios yacimientos mayas.",
     locBordeDelCenote
@@ -957,6 +1137,7 @@ player.updateCmdObjs = function() {
     });
 
     dvCmdObjs.appendChild( pObjs );
+    ctrl.clearAnswers();
 }
 
 player.postAction = function() {
@@ -968,7 +1149,8 @@ const objClothes = ctrl.creaObj(
     [ "ropa", "ropaje", "ropas", "ropajes", "prendas" ],
     "Tu ropa de aguerrido explorador: botas, \
      pantalones cortos, fedora y camisa",
-     player
+    player,
+    Ent.Portable,
 );
 
 player.ini = function() {
@@ -984,6 +1166,13 @@ const pnjLaura = ctrl.personas.creaPersona(
     "Laura Alsar, descendiente del antiguo explorador.",
     locBordeDelCenote
 );
+
+pnjLaura.preStart = function() {
+    ctrl.clearAnswers();
+    ctrl.personas.getPlayer().say(
+        "A veces tengo pensamientos extraños."
+    );
+};
 
 pnjLaura.stopMovingWithPlayer = function() {
     ctrl.removeDaemon( "Laura::withPlayer" );
@@ -1019,32 +1208,22 @@ pnjLaura.ini = function() {
           && !ctrl.isPresent( objAntorcha )
           && !objAntorcha.isLit )
         {
-            if ( loc == locSalaRecibidor ) {
-                ctrl.goto( locCueva );
-                ctrl.print( "Laura comienza a pegarse a las paredes, \
-                             palpando en su alrededor." );
-                pnjLaura.say( "Está demasiado oscuro... no puedo..." );
-                ctrl.print( "Retrocedes siguiendo a Laura... está claro\
-                           que no soporta la oscuridad." );
-            } else {
-                endGame( "<p><p>Laura empieza a hablar nerviosamente...\
-                            <br/>&mdash;No puedo... no puedo.. ¡no puedo ver!</p>\
-                            <p>Antes de que puedas evitarlo, la chica \
-                            sale corriendo.</p>\
-                            <p>&mdash;Tengo que salir... ¡TENGO QUE SALIR DE AQUÍ!</p>\
-                            <p>Intentas seguir a Laura, pero a oscuras \
-                            es muy complicado hacerlo sin tropezar y \
-                            caer...</p>\
-                            <p>&mdash;¡AHHHHHHHHHHHH!</p>\
-                            <p>&mdash;¡Laura! ... ¡LAURA!</p>\
-                            <p>Aunque no quieres creerlo, sabes \
-                            perfectamente lo que ha pasado. Intentas \
-                            localizarla por donde escuchaste el grito, \
-                            pero sabes que lo más probable es que tú también \
-                            termines cayendo...</p>",
-                            "res/balcon.jpg" );
-            }
-
+            endGame( "<p><p>Laura empieza a hablar nerviosamente...\
+                        <br/>&mdash;No puedo... no puedo.. ¡no puedo ver!</p>\
+                        <p>Antes de que puedas evitarlo, la chica \
+                        sale corriendo.</p>\
+                        <p>&mdash;Tengo que salir... ¡TENGO QUE SALIR DE AQUÍ!</p>\
+                        <p>Intentas seguir a Laura, pero a oscuras \
+                        es muy complicado hacerlo sin tropezar y \
+                        caer...</p>\
+                        <p>&mdash;¡AHHHHHHHHHHHH!</p>\
+                        <p>&mdash;¡Laura! ... ¡LAURA!</p>\
+                        <p>Aunque no quieres creerlo, sabes \
+                        perfectamente lo que ha pasado. Intentas \
+                        localizarla por donde escuchaste el grito, \
+                        pero sabes que lo más probable es que tú también \
+                        termines cayendo...</p>",
+                        "res/balcon.jpg" );
         }
     });
 };
@@ -1181,6 +1360,18 @@ function endGame(txt, imagePath)
 
 
 // ================================================================== Start
-ctrl.personas.changePlayer( player );
-//ctrl.places.setStart( locBordeDelCenote );
-ctrl.places.setStart( locCueva );
+ctrl.ini = function() {
+    ctrl.setTitle( "La ciudad perdida" );
+    ctrl.setPic( "res/portada.jpg" );
+    ctrl.setAuthor( "baltasarq@gmail.com" );
+    ctrl.setVersion( "0.1 20220509" );
+    ctrl.setIntro( "<p>Episodio 1<br/>\
+                    Recibes la llamada de la hija de un explorador \
+                    del siglo pasado para recuperar las pistas dejadas \
+                    por él y poder encontrar \
+                    la ciudad perdida de Chactun.</p>" );
+
+    ctrl.personas.changePlayer( player );
+    //ctrl.places.setStart( locBordeDelCenote );
+    ctrl.places.setStart( locCueva );
+};
